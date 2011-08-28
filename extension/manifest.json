@@ -18,7 +18,11 @@
 				"common/action/addClick.js",
 				"common/action/getClicks.js",
 				"collector.js",
-				"drawer.js"
+				"drawer.js",
+				"drawer/map.js"
+			],
+			"css": [
+				"styles.css"
 			]
 		}
 	],

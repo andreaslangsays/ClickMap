@@ -4,6 +4,8 @@ CM.Drawer = JW.Model.extend({
 	
 	getClicksRequest	: null,		// [readonly] JW.Request
 	
+	mapView				: null,		// [readonly] CM.Drawer.Map
+	
 	init: function(config)
 	{
 		this._super(config);
@@ -19,7 +21,26 @@ CM.Drawer = JW.Model.extend({
 	
 	toggleClickMapAction: function()
 	{
-		alert("horosho");
+		if (this.mapView)
+			this.hideClickMap();
+		else
+			this.showClickMap();
+	},
+	
+	showClickMap: function()
+	{
+		this.mapView = new CM.Drawer.Map({
+			clicks		: this.clicks,
+			renderTo	: document.body
+		});
+		
+		this.mapView.update();
+	},
+	
+	hideClickMap: function()
+	{
+		this.mapView.destroy();
+		delete this.mapView;
 	},
 	
 	_initGetClicksRequest: function()
@@ -28,14 +49,7 @@ CM.Drawer = JW.Model.extend({
 		this.getClicksRequest.bind("success", this._onGetClicksSuccess, this);
 	},
 	
-	_initPageAction: function()
-	{
-		chrome.extension.sendRequest({
-			action: "showPageAction"
-		});
-	},
-	
-	_convertClicks: function(clicks)
+	_initClicks: function(clicks)
 	{
 		this.clicks = {};
 		for (var i = 0; i < clicks.length; ++i)
@@ -44,8 +58,13 @@ CM.Drawer = JW.Model.extend({
 			this.clicks[click.width] = this.clicks[click.width] || [];
 			this.clicks[click.width].push(click);
 		}
-		
-		this._initPageAction();
+	},
+	
+	_initPageAction: function()
+	{
+		chrome.extension.sendRequest({
+			action: "showPageAction"
+		});
 	},
 	
 	_onGetTabId: function(response)
@@ -60,7 +79,7 @@ CM.Drawer = JW.Model.extend({
 		if (JW.isEmpty(clicks))
 			return;
 		
-		this.clicks = this._convertClicks(clicks);
+		this._initClicks(clicks);
 		this._initPageAction();
 	},
 	
