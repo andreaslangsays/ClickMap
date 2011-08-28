@@ -21,6 +21,11 @@ CM.Drawer = JW.Model.extend({
 		this.getClicksRequest.bind("success", this._onGetClicksSuccess, this);
 	},
 	
+	_initPageAction: function()
+	{
+		alert("Clicks were there!");
+	},
+	
 	_onGetTabId: function(response)
 	{
 		this.tab = response.tab;
@@ -30,6 +35,8 @@ CM.Drawer = JW.Model.extend({
 	_onGetClicksSuccess: function(response)
 	{
 		this.clicks = response.result.clicks;
+		if (!JW.isEmpty(this.clicks))
+			this._initPageAction();
 	}
 });
 

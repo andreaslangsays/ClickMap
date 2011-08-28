@@ -14,6 +14,8 @@
 				"thirdparty/jwidget.js",
 				"common.js",
 				"common/action.js",
+				"common/action/addClick.js",
+				"common/action/getClicks.js",
 				"collector.js",
 				"drawer.js"
 			]

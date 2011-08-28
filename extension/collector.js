@@ -52,7 +52,7 @@ function addEvtListener(obj, evtName, f)
 /* Main variables */
 var clickHeatGroup = 'cm',
 clickHeatSite = '',
-clickHeatServer = 'http://www.ya.ru',
+clickHeatServer = CM.Action.addClick.url,
 clickHeatLastIframe = -1,
 clickHeatTime = 0,
 clickHeatQuota = -1,
