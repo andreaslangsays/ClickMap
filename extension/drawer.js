@@ -10,9 +10,16 @@ CM.Drawer = JW.Model.extend({
 		
 		this._initGetClicksRequest();
 		
+		chrome.extension.onRequest.addListener(this._onRequest.inScope(this));
+		
 		chrome.extension.sendRequest({
 			action: "getTab"
 		}, this._onGetTabId.inScope(this));
+	},
+	
+	toggleClickMapAction: function()
+	{
+		alert("horosho");
 	},
 	
 	_initGetClicksRequest: function()
@@ -23,7 +30,22 @@ CM.Drawer = JW.Model.extend({
 	
 	_initPageAction: function()
 	{
-		alert("Clicks were there!");
+		chrome.extension.sendRequest({
+			action: "showPageAction"
+		});
+	},
+	
+	_convertClicks: function(clicks)
+	{
+		this.clicks = {};
+		for (var i = 0; i < clicks.length; ++i)
+		{
+			var click = clicks[i];
+			this.clicks[click.width] = this.clicks[click.width] || [];
+			this.clicks[click.width].push(click);
+		}
+		
+		this._initPageAction();
 	},
 	
 	_onGetTabId: function(response)
@@ -32,11 +54,19 @@ CM.Drawer = JW.Model.extend({
 		this.getClicksRequest.load({ url: this.tab.url });
 	},
 	
-	_onGetClicksSuccess: function(response)
+	_onGetClicksSuccess: function(event, response)
 	{
-		this.clicks = response.result.clicks;
-		if (!JW.isEmpty(this.clicks))
-			this._initPageAction();
+		var clicks = response.result.clicks;
+		if (JW.isEmpty(clicks))
+			return;
+		
+		this.clicks = this._convertClicks(clicks);
+		this._initPageAction();
+	},
+	
+	_onRequest: function(request, sender, sendResponse)
+	{
+		sendResponse(this[request.action + "Action"](request, sender));
 	}
 });
 

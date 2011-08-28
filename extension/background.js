@@ -4,6 +4,7 @@ CM.Background = JW.Model.extend({
 		this._super(config);
 		
 		chrome.extension.onRequest.addListener(this._onRequest.inScope(this));
+		chrome.pageAction.onClicked.addListener(this._onPageActionClicked.inScope(this));
 	},
 	
 	getTabAction: function(request, sender)
@@ -13,9 +14,21 @@ CM.Background = JW.Model.extend({
 		};
 	},
 	
+	showPageActionAction: function(request, sender)
+	{
+		chrome.pageAction.show(sender.tab.id);
+	},
+	
 	_onRequest: function(request, sender, sendResponse)
 	{
 		sendResponse(this[request.action + "Action"](request, sender));
+	},
+	
+	_onPageActionClicked: function(tab)
+	{
+		chrome.tabs.sendRequest(tab.id, {
+			action: "toggleClickMap"
+		});
 	}
 });
 
