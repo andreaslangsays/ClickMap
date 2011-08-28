@@ -4,17 +4,24 @@
 	"description": "Click map",
 	"background_page": "background.html",
 	"browser_action": {
-	"default_icon": "icon.png"
+		"default_icon": "icon.png"
 	},
 	"content_scripts": [
 		{
 			"matches": ["<all_urls>"],
 			"js": [
-				"clickheat.js"
+				"thirdparty/jquery.js",
+				"thirdparty/jwidget.js",
+				"common.js",
+				"common/action.js",
+				"collector.js",
+				"drawer.js"
 			]
 		}
 	],
 	"permissions": [
-		"http://www.ya.ru"
+		"http://lilo.su",
+		"tabs",
+		"http://*/*"
 	]
 }
